@@ -4,26 +4,26 @@ import math
 import csv 
 from datetime import datetime
 
-# Initialize MediaPipe FaceMesh
+# Inicializa MediaPipe Face_Mesh
 mp_face_mesh = mp.solutions.face_mesh
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
-# Define lip landmark indices
+# Definir los indices de referencia labial
 OUTER_LIPS_IDXS = [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 62, 96, 89, 180, 85, 16, 315, 404, 319, 325, 292]
 INNER_LIPS_IDXS = [78, 95, 88, 178, 87, 14, 317, 402, 318, 324, 308, 76, 191, 81, 82, 13, 312, 311, 415, 310]
 
-# Specific landmark indices for feature calculation
+# Índices de referencia específicos 
 UPPER_LIP_PT_IDX = 13
 LOWER_LIP_PT_IDX = 14
 LEFT_MOUTH_CORNER_IDX = 61
 RIGHT_MOUTH_CORNER_IDX = 291
 
-# Thresholds for mouth state classification - may need tuning based on observation.
+# Clasificación del estado de la boca (es necesario ajustarlos en función de la observación)
 MOUTH_CLOSED_THRESHOLD = 0.04
 MOUTH_OPEN_THRESHOLD = 0.1
 
-# CSV Logging Setup
+# CSV Setup
 CSV_FILENAME = "lip_features_log.csv"
 CSV_HEADER = [
     "timestamp", "vertical_opening", "horizontal_width",
@@ -31,14 +31,14 @@ CSV_HEADER = [
     "left_corner_x", "left_corner_y", "right_corner_x", "right_corner_y"
 ]
 
-# Initialize the camera
+# Inicializa la cámara
 cap = cv2.VideoCapture(0)
 
 if not cap.isOpened():
     print("Error: Could not open video device.")
     exit()
 
-# Open CSV file for writing
+# Escribir el CSV
 try:
     csv_file = open(CSV_FILENAME, 'a', newline='')
     csv_writer = csv.writer(csv_file)
@@ -71,7 +71,7 @@ with mp_face_mesh.FaceMesh(
 
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
-                # Draw lip landmarks
+                # Dibujar puntos de referencia para los labios
                 for idx in OUTER_LIPS_IDXS:
                     if 0 <= idx < len(face_landmarks.landmark):
                         landmark = face_landmarks.landmark[idx]
@@ -106,13 +106,13 @@ with mp_face_mesh.FaceMesh(
                     except Exception as e:
                         print(f"Error writing to CSV: {e}")
 
-                    # Display features on frame
+                    # Características de la pantalla
                     cv2.putText(frame, f"Open: {vertical_opening:.4f}", (20, 40), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                     cv2.putText(frame, f"Width: {horizontal_width:.4f}", (20, 70), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                     
-                    # Determine Mouth State
+                    # Determinar el estado de la boca
                     if vertical_opening < MOUTH_CLOSED_THRESHOLD:
                         mouth_state_str = "Closed"
                     elif vertical_opening > MOUTH_OPEN_THRESHOLD:
@@ -124,7 +124,7 @@ with mp_face_mesh.FaceMesh(
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
                 else:
-                    # Display warning and N/A state if landmarks not detected
+                    # Mostrar advertencia y estado N/D si no se detectan puntos de referencia
                     cv2.putText(frame, "Landmarks not detected", (20, 40), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                     cv2.putText(frame, "Mouth State: N/A", (20, 100), 
