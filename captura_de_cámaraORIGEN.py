@@ -1,4 +1,6 @@
 # Librerias camara, puntos labios, CSV y tiempo
+# 
+# antes es necesario pip install opencv-python opencv-python-headless
 import cv2
 import mediapipe as mp
 import math
