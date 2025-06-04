@@ -107,30 +107,32 @@ with mp_face_mesh.FaceMesh(
                         print(f"Error writing to CSV: {e}")
 
                     # Características de la pantalla
-                    cv2.putText(frame, f"Open: {vertical_opening:.4f}", (20, 40), 
+                    cv2.putText(frame, f"Abierto: {vertical_opening:.4f}", (20, 40), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                    cv2.putText(frame, f"Width: {horizontal_width:.4f}", (20, 70), 
+                    cv2.putText(frame, f"Ancho: {horizontal_width:.4f}", (20, 70), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                     
                     # Determinar el estado de la boca
                     if vertical_opening < MOUTH_CLOSED_THRESHOLD:
-                        mouth_state_str = "Closed"
+                        mouth_state_str = "Cerrado"
                     elif vertical_opening > MOUTH_OPEN_THRESHOLD:
-                        mouth_state_str = "Open"
+                        mouth_state_str = "Abierto"
                     else:
                         mouth_state_str = "Neutral"
                     
-                    cv2.putText(frame, f"Mouth State: {mouth_state_str}", (20, 100), 
+                    cv2.putText(frame, f"Estado de la boca: {mouth_state_str}", (20, 100), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                    cv2.putText(frame, f"Presiona Q para salir", (20, 130), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
                 else:
                     # Mostrar advertencia y estado N/D si no se detectan puntos de referencia
-                    cv2.putText(frame, "Landmarks not detected", (20, 40), 
+                    cv2.putText(frame, "Puntos de referencia no detectados", (20, 40), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-                    cv2.putText(frame, "Mouth State: N/A", (20, 100), 
+                    cv2.putText(frame, "Estado de la boca: N/A", (20, 100), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-        cv2.imshow("Camera Feed with Lip Landmarks", frame)
+        cv2.imshow("Transmisión de cámara con marcas en los labios", frame)
 
         if cv2.waitKey(5) & 0xFF == ord('q'):
             break
@@ -138,6 +140,6 @@ with mp_face_mesh.FaceMesh(
 cap.release()
 if 'csv_file' in locals() and not csv_file.closed:
     csv_file.close()
-    print(f"CSV log saved to {CSV_FILENAME}")
+    print(f"CSV log grabado en {CSV_FILENAME}")
 cv2.destroyAllWindows()
-print("Camera released and windows closed.")
+print("Cámara liberada y ventanas cerradas.")
