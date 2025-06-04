@@ -1,3 +1,4 @@
+# Librerias camara, puntos labios, CSV y tiempo
 import cv2
 import mediapipe as mp
 import math
