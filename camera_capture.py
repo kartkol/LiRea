@@ -1,5 +1,8 @@
 import cv2
 import mediapipe as mp
+
+# requieren entorno virtual
+# 
 import math
 import csv 
 from datetime import datetime
